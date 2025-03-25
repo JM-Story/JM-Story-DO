@@ -28,6 +28,16 @@ module "vpc" {
   azs      = ["ap-northeast-2a", "ap-northeast-2b"]
 }
 
+# 🔹 Frontend 모듈로 S3 + CloudFront 배포
+module "frontend" {
+  source = "../envs/dev/frontend"
+
+  stage       = local.stage
+  bucket_name = "jm-story-frontend-${local.stage}"
+  domain_name = "dev.example.com"
+}
+
+
 # 🔹 Backend 모듈로 ALB, EC2, RDS 생성
 module "backend" {
   source = "../envs/dev/backend"

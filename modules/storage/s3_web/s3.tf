@@ -1,12 +1,12 @@
-resource "aws_s3_bucket" "static" {
+resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
   tags = {
     Name = "static-site-${var.stage}"
   }
 }
 
-resource "aws_s3_bucket_website_configuration" "static" {
-  bucket = aws_s3_bucket.static.id
+resource "aws_s3_bucket_website_configuration" "bucket" {
+  bucket = aws_s3_bucket.bucket.id
 
   index_document {
     suffix = var.index_document
@@ -17,8 +17,8 @@ resource "aws_s3_bucket_website_configuration" "static" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "static_block" {
-  bucket = aws_s3_bucket.static.id
+resource "aws_s3_bucket_public_access_block" "bucket_block" {
+  bucket = aws_s3_bucket.bucket.id
   block_public_acls   = true
   block_public_policy = true
   ignore_public_acls  = true

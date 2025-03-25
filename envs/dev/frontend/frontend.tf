@@ -1,5 +1,5 @@
 module "s3" {
-  source         = "../../../modules/storage/s3"
+  source         = "../../../modules/storage/s3_web"
   stage          = "dev"
   bucket_name    = "jm-story-frontend-dev"
   index_document = "index.html"
@@ -7,7 +7,7 @@ module "s3" {
 }
 
 module "cloudfront" {
-  source                 = "../../../modules/storage/cloudfront"
+  source                 = "../../../modules/cdn/cloudfront"
   stage                  = "dev"
   bucket_name            = module.s3.bucket_name
   s3_origin_domain_name  = module.s3.bucket_regional_domain_name
