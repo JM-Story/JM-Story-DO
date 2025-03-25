@@ -22,15 +22,25 @@ locals {
 
 # 🔹 VPC 생성
 module "vpc" {
-  source   = "../modules/network/vpc"
+  source   = "../../modules/network/vpc"
   stage    = local.stage
   vpc_cidr = "10.0.0.0/23"
   azs      = ["ap-northeast-2a", "ap-northeast-2b"]
 }
 
+module "openvpn" {
+  source        = "../../modules/compute/ec2_openvpn"
+  stage         = "dev"
+  vpc_id        = module.vpc.vpc_id
+  subnet_id     = module.vpc.public_subnet_ids[0]
+  ami_id        = "ami-0abcd1234abcd1234"
+  key_name      = "jm-keypair"
+  allowed_cidrs = ["0.0.0.0/0"]
+}
+
 # 🔹 Frontend 모듈로 S3 + CloudFront 배포
 module "frontend" {
-  source = "../envs/dev/frontend"
+  source = "../../envs/dev/frontend"
 
   stage       = local.stage
   bucket_name = "jm-story-frontend-${local.stage}"
@@ -40,7 +50,7 @@ module "frontend" {
 
 # 🔹 Backend 모듈로 ALB, EC2, RDS 생성
 module "backend" {
-  source = "../envs/dev/backend"
+  source = "../../envs/dev/backend"
 
   stage        = local.stage
   servicename  = local.servicename
