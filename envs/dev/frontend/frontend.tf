@@ -14,5 +14,5 @@ module "cloudfront" {
   default_root_object    = "index.html"
   use_default_cert       = true
   acm_cert_arn           = ""
-  domain_name            = "dev.example.com"
+  domain_name            = var.domain_name
 }
