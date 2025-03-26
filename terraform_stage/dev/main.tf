@@ -34,7 +34,7 @@ module "openvpn" {
   vpc_id        = module.vpc.vpc_id
   subnet_id     = module.vpc.public_subnet_ids[0]
   ami_id        = "ami-0abcd1234abcd1234"
-  key_name      = "jm-keypair"
+  key_name      = "js_admin"
   allowed_cidrs = ["0.0.0.0/0"]
 }
 
