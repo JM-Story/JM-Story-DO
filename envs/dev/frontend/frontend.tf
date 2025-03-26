@@ -7,7 +7,7 @@ module "s3" {
 }
 
 module "cloudfront" {
-  source                 = "../../../modules/cdn/cloudfront"
+  source                 = "../../../modules/network/cloudfront"
   stage                  = "dev"
   bucket_name            = module.s3.bucket_name
   s3_origin_domain_name  = module.s3.bucket_regional_domain_name
