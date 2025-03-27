@@ -1,7 +1,14 @@
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = "OAI for CloudFront"
+}
+
 resource "aws_cloudfront_distribution" "cdn" {
   enabled             = true
   default_root_object = var.default_root_object
+  
   comment             = "CloudFront for ${var.stage} - ${var.domain_name}"
+
+  aliases = ["jm-story.site", "www.jm-story.site"]
 
   origin {
     domain_name = var.s3_origin_domain_name
@@ -39,18 +46,14 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = var.use_default_cert
     acm_certificate_arn            = var.acm_cert_arn
     ssl_support_method             = "sni-only"
     minimum_protocol_version       = "TLSv1.2_2021"
+    cloudfront_default_certificate = false
   }
 
   tags = {
     Environment = var.stage
     Name        = "cloudfront-${var.stage}"
   }
-}
-
-resource "aws_cloudfront_origin_access_identity" "oai" {
-  comment = "OAI for ${var.stage} CloudFront"
 }

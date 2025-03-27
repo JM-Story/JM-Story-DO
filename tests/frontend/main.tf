@@ -1,3 +1,31 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
+    }
+  }
+
+  backend "s3" {
+    bucket         = "jm-story-terraformstate"
+    key            = "dev/terraform/ec2.tfstate"
+    region         = "ap-northeast-2"
+    encrypt        = true
+    dynamodb_table = "jm-story-terraform-state"
+  }
+}
+
+provider "aws" {
+  region = "ap-northeast-2"
+
+  default_tags {
+    tags = {
+      Name    = "jm-story"
+      Subject = "jm-story-dev"
+    }
+  }
+}
+
 module "s3" {
   source          = "../../modules/storage/s3_web"
   stage           = "dev"

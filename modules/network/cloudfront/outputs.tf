@@ -8,7 +8,14 @@ output "cloudfront_distribution_id" {
   value       = aws_cloudfront_distribution.cdn.id
 }
 
-output "cloudfront_oai" {
-  description = "Origin Access Identity path"
-  value       = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+output "domain_name" {
+  value = aws_cloudfront_distribution.cdn.domain_name
+}
+
+output "hosted_zone_id" {
+  value = aws_cloudfront_distribution.cdn.hosted_zone_id
+}
+
+output "oai_iam_arn" {
+  value = aws_cloudfront_origin_access_identity.oai.iam_arn
 }
