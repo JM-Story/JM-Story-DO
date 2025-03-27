@@ -18,6 +18,8 @@ terraform {
 locals {
   stage        = "dev"
   servicename  = "web"
+  domain_name  = "jm-story.site"
+  subject_alternative_names = ["www.jm-story.site"]
 }
 
 # 🔹 VPC 생성
@@ -30,7 +32,7 @@ module "vpc" {
 
 module "openvpn" {
   source        = "../../modules/compute/ec2_openvpn"
-  stage         = "dev"
+  stage         = local.stage
   vpc_id        = module.vpc.vpc_id
   subnet_id     = module.vpc.public_subnet_ids[0]
   ami_id        = "ami-0abcd1234abcd1234"
@@ -43,8 +45,9 @@ module "frontend" {
   source = "../../envs/dev/frontend"
 
   stage       = local.stage
-  bucket_name = "jm-story-frontend-${local.stage}"
-  domain_name = "dev.example.com"
+  bucket_name = "jm-story-frontend-dev"
+  domain_name = local.domain_name
+  subject_alternative_names = local.subject_alternative_names
 }
 
 

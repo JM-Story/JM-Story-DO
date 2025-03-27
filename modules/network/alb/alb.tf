@@ -5,14 +5,8 @@ resource "aws_lb" "alb" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.sg_alb.id]
   subnets            = var.subnet_ids
-  enable_deletion_protection = true
+  enable_deletion_protection = false
   idle_timeout       = var.idle_timeout
-
-  access_logs {
-    bucket  = var.aws_s3_lb_logs_name
-    prefix  = "aws-alb-${var.stage}-${var.servicename}"
-    enabled = true
-  }
 
   tags = merge(
     {
@@ -64,5 +58,4 @@ resource "aws_lb_target_group_attachment" "tg_attachment" {
   target_group_arn   = aws_lb_target_group.target_group.arn
   target_id          = var.instance_ids[count.index]
   port               = var.port
-  availability_zone  = var.availability_zone
 }

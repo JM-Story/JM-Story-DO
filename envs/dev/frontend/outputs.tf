@@ -1,19 +1,15 @@
-# output "s3_bucket_name" {
-#   description = "S3 bucket name for frontend"
-#   value       = module.s3.bucket_name
-# }
+output "s3_bucket_name" {
+  value = module.s3.bucket_name
+}
 
-# output "s3_website_url" {
-#   description = "Website endpoint of the S3 bucket"
-#   value       = module.s3.website_endpoint
-# }
+output "cloudfront_domain_name" {
+  value = module.cloudfront.domain_name
+}
 
-# output "cloudfront_distribution_id" {
-#   description = "CloudFront distribution ID"
-#   value       = module.cloudfront.cloudfront_distribution_id
-# }
+output "cloudfront_hosted_zone_id" {
+  value = module.cloudfront.hosted_zone_id
+}
 
-# output "cloudfront_domain_name" {
-#   description = "CloudFront distribution domain name"
-#   value       = module.cloudfront.cloudfront_domain_name
-# }
+output "acm_cert_arn" {
+  value = module.acm.cert_arn
+}

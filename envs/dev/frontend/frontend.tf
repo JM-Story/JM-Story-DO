@@ -1,7 +1,7 @@
 module "s3" {
-  source          = "../../modules/storage/s3_web"
-  stage           = "dev"
-  bucket_name     = "jm-story-frontend-dev"
+  source          = "../../../modules/storage/s3_web"
+  stage           = var.stage
+  bucket_name     = var.bucket_name
   index_document  = "index.html"
   error_document  = "error.html"
 } 
@@ -28,31 +28,31 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 }
 
 module "acm" {
-  source = "../../modules/security/acm"
+  source = "../../../modules/security/acm"
 
-  domain_name               = "jm-story.site"
-  subject_alternative_names = ["www.jm-story.site"]
+  domain_name               = var.domain_name
+  subject_alternative_names = var.subject_alternative_names
 }
 
 module "cloudfront" {
-  source                 = "../../modules/network/cloudfront"
-  stage                  = "dev"
+  source                 = "../../../modules/network/cloudfront"
+  stage                  = var.stage
   bucket_name            = module.s3.bucket_name
   s3_origin_domain_name  = module.s3.bucket_regional_domain_name
   acm_cert_arn           = module.acm.cert_arn
   default_root_object    = "index.html"
   use_default_cert       = true
-  domain_name            = "jm-story.site"
+  domain_name            = var.domain_name
   depends_on             = [module.acm]
 }
 
 module "route53" {
-  source    = "../../modules/network/route53"
-  zone_name = "jm-story.site"
+  source    = "../../../modules/network/route53"
+  zone_name = var.domain_name
 
   records = [
     {
-      name           = "jm-story.site"
+      name           = var.domain_name
       type           = "A"
       alias_name     = module.cloudfront.domain_name
       alias_zone_id  = module.cloudfront.hosted_zone_id

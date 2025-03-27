@@ -10,8 +10,6 @@ variable "target_type" {}
 variable "hc_path" {}
 variable "hc_healthy_threshold" { type = number }
 variable "hc_unhealthy_threshold" { type = number }
-variable "availability_zone" {}
-variable "aws_s3_lb_logs_name" {}
 variable "sg_allow_comm_list" { type = list(string) }
 variable "tags" {
   type    = map(string)

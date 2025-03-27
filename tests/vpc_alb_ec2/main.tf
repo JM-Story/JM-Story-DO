@@ -32,6 +32,13 @@ locals {
   servicename = "web"
 }
 
+module "iam-service-role" {
+  source = "../../modules/security/iam/iam-service-role"
+  stage = var.stage
+  servicename = var.servicename
+  tags = var.tags  
+}
+
 module "kms" {
   source       = "../../modules/security/kms"
   stage        = local.stage
@@ -51,7 +58,52 @@ module "vpc" {
   azs      = ["ap-northeast-2a", "ap-northeast-2b"]
 }
 
-# 🔹 2. ALB 생성 (보안 그룹 포함)
+resource "aws_security_group" "alb_to_ec2" {
+  name        = "alb-to-ec2"
+  description = "Allow traffic from ALB to EC2"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    description = "Allow ALB to access EC2"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    security_groups = []
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# 🔹 3. EC2 인스턴스 생성 (보안 그룹 포함)
+module "ec2" {
+  source                    = "../../modules/compute/ec2"
+  stage                     = local.stage
+  servicename               = local.servicename
+  ami                       = "ami-0c9c942bd7bf113a2"
+  instance_type             = "t3.micro"
+  subnet_id                 = module.vpc.private_subnet_ids[0]
+  associate_public_ip       = false
+  vpc_id                    = module.vpc.vpc_id
+  ec2_port                  = 8080
+  ssh_allow_comm_list       = ["0.0.0.0/0"]
+  allowed_sg_ids            = [aws_security_group.alb_to_ec2.id]
+  ec2_iam_role_profile_name = module.iam-service-role.ec2_iam_role_profile_name
+  key_name                  = "jm-admin"
+  is_port_forwarding        = false
+  kms_key_id                = module.kms.ebs_kms_arn
+  ebs_size                  = 20
+  user_data                 = "${file("user_data.sh")}"
+
+  tags = {
+    Name = "aws-ec2-${local.stage}-${local.servicename}"
+  }
+}
+
 module "alb" {
   source                = "../../modules/network/alb"
   stage                 = local.stage
@@ -67,41 +119,15 @@ module "alb" {
   hc_path               = "/health"
   hc_healthy_threshold   = 2
   hc_unhealthy_threshold = 3
-  availability_zone     = "all"
-  aws_s3_lb_logs_name   = "alb-logs-bucket"
   sg_allow_comm_list    = ["0.0.0.0/0"]
 
   tags = {
     Name = "aws-alb-${local.stage}-${local.servicename}"
   }
+
+  depends_on = [module.ec2]
 }
 
-# 🔹 3. EC2 인스턴스 생성 (보안 그룹 포함)
-module "ec2" {
-  source                    = "../../modules/compute/ec2"
-  stage                     = local.stage
-  servicename               = local.servicename
-  ami                       = "ami-0abcd1234abcd1234"
-  instance_type             = "t3.micro"
-  subnet_id                 = module.vpc.private_subnet_ids[0]
-  associate_public_ip       = false
-  vpc_id                    = module.vpc.vpc_id
-  ec2_port                  = 8080
-  ssh_allow_comm_list       = ["0.0.0.0/0"]
-  allowed_sg_ids            = [module.alb.sg_alb_id]
-  ec2_iam_role_profile_name = module.iam-service-role.ec2_iam_role_profile
-  key_name                  = "aws-keypair-${local.stage}-${local.servicename}"
-  is_port_forwarding        = false
-  kms_key_id                = module.kms.ebs_kms_arn
-  ebs_size                  = 20
-  user_data                 = "${file("user_data.sh")}"
-
-  tags = {
-    Name = "aws-ec2-${local.stage}-${local.servicename}"
-  }
-}
-
-# 🔹 4. 출력값 설정
 output "vpc_id" {
   value = module.vpc.vpc_id
 }

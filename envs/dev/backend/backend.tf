@@ -1,24 +1,21 @@
-module "alb" {
-  source = "../../../modules/network/alb"
-  stage  = var.stage
-  servicename = var.servicename
-  vpc_id = var.vpc_id
-  subnet_ids = var.public_subnets
-  instance_ids = [module.ec2.ec2_id]
-  internal = false
-  idle_timeout = 60
-  port = 8080
-  target_type = "instance"
-  hc_path = "/health"
-  hc_healthy_threshold = 2
-  hc_unhealthy_threshold = 3
-  availability_zone = "all"
-  aws_s3_lb_logs_name = "alb-logs-seoul"
-  sg_allow_comm_list = ["0.0.0.0/0"]
+resource "aws_security_group" "alb_to_ec2" {
+  name        = "alb-to-ec2"
+  description = "Allow traffic from ALB to EC2"
+  vpc_id      = module.vpc.vpc_id
 
-  tags = {
-    Service = var.servicename
-    Stage = var.stage
+  ingress {
+    description = "Allow ALB to access EC2"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    security_groups = []
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -33,9 +30,9 @@ module "ec2" {
   vpc_id = var.vpc_id
   ec2_port = 8080
   ssh_allow_comm_list = ["0.0.0.0/0"]
-  allowed_sg_ids = [module.alb.sg_alb_id]
+  allowed_sg_ids = [aws_security_group.alb_to_ec2.id]
   ec2_iam_role_profile_name = var.ec2_iam_role_profile_name
-  key_name = "aws-keypair-${var.stage}-${var.servicename}"
+  key_name = "jm-admin"
   is_port_forwarding = false
   kms_key_id = var.kms_key_id
   ebs_size = 30
@@ -45,6 +42,31 @@ module "ec2" {
     Service = var.servicename
     Stage = var.stage
   }
+}
+
+module "alb" {
+  source          = "../../../modules/network/alb"
+  stage           = var.stage
+  servicename     = var.servicename
+  vpc_id          = var.vpc_id
+  subnet_ids      = var.public_subnets
+  instance_ids    = [module.ec2.ec2_id]
+
+  internal = false
+  idle_timeout = 60
+  port = 8080
+  target_type = "instance"
+  hc_path = "/health"
+  hc_healthy_threshold = 2
+  hc_unhealthy_threshold = 3
+  sg_allow_comm_list = ["0.0.0.0/0"]
+
+  tags = {
+    Service = var.servicename
+    Stage = var.stage
+  }
+
+  depends_on = [module.ec2]
 }
 
 module "rds" {
