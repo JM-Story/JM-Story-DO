@@ -188,7 +188,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          repository: your-org/backend-repo
+          repository: JM-Story/JM-Story-BE
           event-type: deploy-backend
           client-payload: '{"stage": "dev"}'
 
@@ -196,7 +196,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          repository: your-org/frontend-repo
+          repository: JM-Story/JM-Story-FE
           event-type: deploy-frontend
           client-payload: '{"stage": "dev"}'
 
