@@ -91,16 +91,16 @@ jobs:
         }
 
         # Terraform 상태 관리를 위한 S3 버킷과 DynamoDB 테이블 이름
-        S3_BUCKET="jm4520-terraformstate"
-        DYNAMODB_TABLE="jm4520-terraform-state"
+        S3_BUCKET="jm-story-terraformstate"
+        DYNAMODB_TABLE="jm-story-terraformstate"
 
         # 버킷과 테이블의 존재 여부를 확인
         BUCKET_EXISTS=$(check_bucket_exists "$S3_BUCKET")
         DYNAMODB_EXISTS=$(check_dynamodb_exists "$DYNAMODB_TABLE")
 
         # Terraform 명령을 실행할 디렉터리로 이동
-        if [ -d backend ]; then
-            cd backend
+        if [ -d envs/dev/terraform_backend ]; then
+            cd envs/dev/terraform_backend
         else
             echo "Backend directory does not exist. Exiting..."
             exit 1
