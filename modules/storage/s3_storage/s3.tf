@@ -5,12 +5,6 @@ resource "aws_s3_bucket" "this" {
   tags   = var.tags
 }
 
-# S3 Bucket ACL 설정 (권한)
-resource "aws_s3_bucket_acl" "this" {
-  bucket = aws_s3_bucket.this.id
-  acl    = var.acl
-}
-
 # S3 Bucket Versioning 설정 (분리됨)
 resource "aws_s3_bucket_versioning" "this" {
   bucket = aws_s3_bucket.this.id

@@ -16,12 +16,7 @@ variable "subject_alternative_names" {
   default = []
 }
 
-# variable "index_document" {
-#   type    = string
-#   default = "index.html"
-# }
-
-# variable "error_document" {
-#   type    = string
-#   default = "error.html"
-# }
+variable "certificate_arn" {
+  type        = string
+  description = "ARN of ACM certificate for ALB"
+}

@@ -66,7 +66,7 @@ resource "aws_security_group" "sg-ec2" {
   }
 
   tags = {
-    Name = "aws-sg-${var.stage}-${var.servicename}-ec2"
+    name = "aws-sg-${var.stage}-${var.servicename}-ec2"
   }
 }
 
@@ -92,7 +92,7 @@ resource "aws_instance" "ec2" {
   user_data = var.user_data
 
   tags = {
-    Name = "aws-ec2-${var.stage}-${var.servicename}"
+    name = "aws-ec2-${var.stage}-${var.servicename}"
   }
 
   lifecycle {

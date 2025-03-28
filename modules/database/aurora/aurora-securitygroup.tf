@@ -37,6 +37,6 @@ resource "aws_security_group" "sg-aurora" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = merge(tomap({
-         Name =  "aws-sg-${var.stage}-${var.servicename}-aurora-${var.dbname}"}),
+         name =  "aws-sg-${var.stage}-${var.servicename}-aurora-${var.dbname}"}),
         var.tags)
 }

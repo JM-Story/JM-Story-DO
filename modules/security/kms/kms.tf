@@ -3,7 +3,7 @@ resource "aws_kms_key" "rds-kms-key" {
   enable_key_rotation     = true
   deletion_window_in_days = 10
   tags = merge(tomap({
-         Name = "aws-kms-${var.stage}-${var.servicename}-rds"}),
+         name = "aws-kms-${var.stage}-${var.servicename}-rds"}),
          var.tags)
 }
 
@@ -17,7 +17,7 @@ resource "aws_kms_key" "ebs_kms_key" {
   enable_key_rotation     = true
   deletion_window_in_days = 10
   tags = merge(tomap({
-         Name = "aws-kms-${var.stage}-${var.servicename}-ebs"}),
+         name = "aws-kms-${var.stage}-${var.servicename}-ebs"}),
          var.tags)
 }
 

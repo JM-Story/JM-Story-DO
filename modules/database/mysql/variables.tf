@@ -56,7 +56,7 @@ variable "kms_key_arn" {
   type        = string
 }
 
-variable "mysql_sg_id" {
+variable "ec2_sg_id" {
   description = "Security group ID for MySQL"
   type        = string
 }

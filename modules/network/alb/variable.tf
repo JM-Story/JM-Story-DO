@@ -15,3 +15,7 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+variable "certificate_arn" {
+  description = "ACM 인증서 ARN for HTTPS 리스너"
+  type        = string
+}

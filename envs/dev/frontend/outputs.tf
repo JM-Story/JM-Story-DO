@@ -10,6 +10,6 @@ output "cloudfront_hosted_zone_id" {
   value = module.cloudfront.hosted_zone_id
 }
 
-output "acm_cert_arn" {
-  value = module.acm.cert_arn
+output "cloudfront_distribution_id" {
+  value = module.cloudfront.cloudfront_distribution_id
 }

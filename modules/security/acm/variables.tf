@@ -1,3 +1,8 @@
+variable "zone_name" {
+  type        = string
+  description = "Route 53 hosted zone name (e.g., example.com)"
+}
+
 variable "domain_name" {
   description = "기본 도메인 이름 (예: example.com)"
   type        = string

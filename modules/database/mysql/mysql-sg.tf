@@ -8,7 +8,7 @@ resource "aws_security_group" "mysql_sg" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = var.allowed_cidr_blocks
+    security_groups = [var.ec2_sg_id]
   }
 
   # 아웃바운드 트래픽은 모두 허용
@@ -20,6 +20,6 @@ resource "aws_security_group" "mysql_sg" {
   }
 
   tags = {
-    Name = "mysql-sg-${var.stage}"
+    name = "mysql-sg-${var.stage}"
   }
 }

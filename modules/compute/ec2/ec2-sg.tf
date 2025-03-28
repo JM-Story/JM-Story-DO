@@ -26,6 +26,6 @@ resource "aws_security_group" "sg_ec2" {
   }
 
   tags = merge({
-    Name = "aws-sg-${var.stage}-${var.servicename}-ec2"
+    name = "aws-sg-${var.stage}-${var.servicename}-ec2"
   }, var.tags)
 }

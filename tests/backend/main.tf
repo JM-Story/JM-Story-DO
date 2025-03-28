@@ -39,7 +39,7 @@ module "kms" {
   enable_key_rotation = true
 
   tags = {
-    Name = "kms-key-${local.stage}"
+    name = "kms-key-${local.stage}"
   }
 }
 
@@ -62,7 +62,7 @@ module "alb" {
 
   internal              = false
   idle_timeout          = 60
-  port                  = 8080
+  port                  = 8000
   target_type           = "instance"
   hc_path               = "/health"
   hc_healthy_threshold   = 2
@@ -70,7 +70,7 @@ module "alb" {
   sg_allow_comm_list    = ["0.0.0.0/0"]
 
   tags = {
-    Name = "aws-alb-${local.stage}-${local.servicename}"
+    name = "aws-alb-${local.stage}-${local.servicename}"
   }
 }
 
@@ -84,7 +84,7 @@ module "ec2" {
   subnet_id                 = module.vpc.private_subnet_ids[0]
   associate_public_ip       = false
   vpc_id                    = module.vpc.vpc_id
-  ec2_port                  = 8080
+  ec2_port                  = 8000
   ssh_allow_comm_list       = ["0.0.0.0/0"]
   allowed_sg_ids            = [module.alb.sg_alb_id]
   ec2_iam_role_profile_name = module.iam-service-role.ec2_iam_role_profile
@@ -95,7 +95,7 @@ module "ec2" {
   user_data                 = "${file("user_data.sh")}"
 
   tags = {
-    Name = "aws-ec2-${local.stage}-${local.servicename}"
+    name = "aws-ec2-${local.stage}-${local.servicename}"
   }
 }
 

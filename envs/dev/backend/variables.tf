@@ -14,3 +14,9 @@ variable "user_data" { type = string }
 variable "db_username" { type = string }
 variable "db_password" { type = string }
 variable "db_subnet_group" { type = string }
+
+variable "domain_name" { type = string }
+variable "certificate_arn" {
+  type        = string
+  description = "ARN of ACM certificate for ALB"
+}

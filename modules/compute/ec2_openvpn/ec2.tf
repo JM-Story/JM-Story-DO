@@ -4,9 +4,23 @@ resource "aws_security_group" "openvpn_sg" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port   = 1194
-    to_port     = 1194
-    protocol    = "udp"
+    from_port   = 943
+    to_port     = 943
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_cidrs
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_cidrs
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = var.allowed_cidrs
   }
 
@@ -18,7 +32,7 @@ resource "aws_security_group" "openvpn_sg" {
   }
 
   tags = {
-    Name = "openvpn-sg-${var.stage}"
+    name = "openvpn-sg-${var.stage}"
   }
 }
 
@@ -29,8 +43,6 @@ resource "aws_instance" "openvpn" {
   vpc_security_group_ids      = [aws_security_group.openvpn_sg.id]
   associate_public_ip_address = true
   key_name                    = var.key_name
-
-  user_data = file("${path.module}/install_openvpn.sh")
 
   tags = {
     Name = "openvpn-${var.stage}"

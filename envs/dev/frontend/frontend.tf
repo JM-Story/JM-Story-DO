@@ -27,23 +27,26 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   depends_on = [module.cloudfront.oai_iam_arn]
 }
 
-module "acm" {
-  source = "../../../modules/security/acm"
+# module "acm" {
+#   source = "../../../modules/security/acm"
 
-  domain_name               = var.domain_name
-  subject_alternative_names = var.subject_alternative_names
-}
+#   providers = {
+#     aws = aws.virginia
+#   }
+
+#   domain_name               = var.domain_name
+#   subject_alternative_names = var.subject_alternative_names
+# }
 
 module "cloudfront" {
   source                 = "../../../modules/network/cloudfront"
   stage                  = var.stage
   bucket_name            = module.s3.bucket_name
   s3_origin_domain_name  = module.s3.bucket_regional_domain_name
-  acm_cert_arn           = module.acm.cert_arn
+  acm_cert_arn           = var.certificate_arn
   default_root_object    = "index.html"
   use_default_cert       = true
   domain_name            = var.domain_name
-  depends_on             = [module.acm]
 }
 
 module "route53" {

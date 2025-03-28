@@ -30,7 +30,7 @@ variable "associate_public_ip" {
 }
 
 variable "ec2_port" {
-  description = "Application port to allow (e.g. 8080)"
+  description = "Application port to allow"
   type        = number
 }
 

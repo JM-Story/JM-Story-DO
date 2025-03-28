@@ -22,7 +22,7 @@ resource "aws_instance" "ec2" {
   user_data = var.user_data
 
   tags = merge({
-    Name = "aws-ec2-${var.stage}-${var.servicename}"
+    name = "aws-ec2-${var.stage}-${var.servicename}"
   }, var.tags)
 
   lifecycle {

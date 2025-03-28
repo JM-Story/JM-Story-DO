@@ -1,14 +1,14 @@
 resource "aws_security_group" "alb_to_ec2" {
   name        = "alb-to-ec2"
   description = "Allow traffic from ALB to EC2"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "Allow ALB to access EC2"
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
-    security_groups = []
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -28,7 +28,7 @@ module "ec2" {
   subnet_id = var.private_subnets[0]
   associate_public_ip = false
   vpc_id = var.vpc_id
-  ec2_port = 8080
+  ec2_port = 8000
   ssh_allow_comm_list = ["0.0.0.0/0"]
   allowed_sg_ids = [aws_security_group.alb_to_ec2.id]
   ec2_iam_role_profile_name = var.ec2_iam_role_profile_name
@@ -54,12 +54,13 @@ module "alb" {
 
   internal = false
   idle_timeout = 60
-  port = 8080
+  port = 8000
   target_type = "instance"
-  hc_path = "/health"
+  hc_path = "/docs"
   hc_healthy_threshold = 2
   hc_unhealthy_threshold = 3
   sg_allow_comm_list = ["0.0.0.0/0"]
+  certificate_arn = var.certificate_arn
 
   tags = {
     Service = var.servicename
@@ -67,6 +68,23 @@ module "alb" {
   }
 
   depends_on = [module.ec2]
+}
+
+module "route53_backend" {
+  source    = "../../../modules/network/route53"
+  zone_name = var.domain_name
+
+  records = [
+    {
+      name                  = "${var.stage}-api.${var.domain_name}"
+      type                  = "A"
+      alias_name            = module.alb.alb_dns_name
+      alias_zone_id         = module.alb.alb_zone_id
+      evaluate_target_health = true
+    }
+  ]
+
+  depends_on = [module.alb]
 }
 
 module "rds" {
@@ -82,7 +100,7 @@ module "rds" {
   password = var.db_password
   parameter_group = "default.mysql8.0"
   kms_key_arn = var.kms_key_id
-  mysql_sg_id = module.ec2.sg_ec2_id
+  ec2_sg_id = module.ec2.sg_ec2_id
   db_subnet_group = var.db_subnet_group
   publicly_accessible = false
   multi_az = false

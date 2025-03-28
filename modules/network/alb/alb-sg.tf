@@ -23,7 +23,7 @@ resource "aws_security_group" "sg_alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge({ Name = "aws-sg-${var.stage}-${var.servicename}-alb" }, var.tags)
+  tags = merge({ name = "aws-sg-${var.stage}-${var.servicename}-alb" }, var.tags)
 }
 
 resource "aws_security_group" "sg_alb_to_tg" {
@@ -44,5 +44,5 @@ resource "aws_security_group" "sg_alb_to_tg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge({ Name = "aws-sg-${var.stage}-${var.servicename}-alb-to-tg" }, var.tags)
+  tags = merge({ name = "aws-sg-${var.stage}-${var.servicename}-alb-to-tg" }, var.tags)
 }

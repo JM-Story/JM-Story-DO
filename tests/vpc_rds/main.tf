@@ -71,7 +71,7 @@ resource "aws_security_group" "mysql_sg" {
   }
 
   tags = {
-    Name = "mysql-sg-${module.vpc.vpc_id}"
+    name = "mysql-sg-${module.vpc.vpc_id}"
   }
 }
 
@@ -81,7 +81,7 @@ resource "aws_db_subnet_group" "mysql" {
   subnet_ids = module.vpc.private_subnet_ids
 
   tags = {
-    Name = "mysql-subnet-group"
+    name = "mysql-subnet-group"
   }
 }
 
@@ -106,7 +106,7 @@ resource "aws_db_instance" "mysql" {
   skip_final_snapshot     = true
 
   tags = {
-    Name = "mysql-dev"
+    name = "mysql-dev"
   }
 }
 

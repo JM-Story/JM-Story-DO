@@ -3,12 +3,6 @@ variable "bucket_name" {
   description = "The name of the S3 bucket"
 }
 
-variable "acl" {
-  type        = string
-  default     = "private"
-  description = "The canned ACL to apply"
-}
-
 variable "versioning" {
   type        = bool
   default     = false

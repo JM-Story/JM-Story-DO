@@ -6,7 +6,7 @@ resource "aws_vpc" "main_vpc" {
   enable_dns_support   = true
 
   tags = {
-    Name = "vpc-${var.stage}"
+    name = "vpc-${var.stage}"
   }
 }
 
@@ -19,7 +19,7 @@ resource "aws_subnet" "public_subnets" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "public-subnet-${count.index + 1}-${var.stage}"
+    name = "public-subnet-${count.index + 1}-${var.stage}"
   }
 }
 
@@ -31,7 +31,7 @@ resource "aws_subnet" "private_subnets" {
   availability_zone = var.azs[count.index]
 
   tags = {
-    Name = "private-subnet-${count.index + 1}-${var.stage}"
+    name = "private-subnet-${count.index + 1}-${var.stage}"
   }
 }
 
@@ -43,7 +43,7 @@ resource "aws_subnet" "db_subnets" {
   availability_zone = var.azs[count.index]
 
   tags = {
-    Name = "db-subnet-${count.index + 1}-${var.stage}"
+    name = "db-subnet-${count.index + 1}-${var.stage}"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   subnet_ids = aws_subnet.db_subnets[*].id
 
   tags = {
-    Name = "db-subnet-group-${var.stage}"
+    name = "db-subnet-group-${var.stage}"
   }
 }
 
@@ -62,7 +62,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main_vpc.id
 
   tags = {
-    Name = "igw-${var.stage}"
+    name = "igw-${var.stage}"
   }
 }
 
@@ -108,7 +108,7 @@ resource "aws_route_table" "private_rt" {
   }
 
   tags = {
-    Name = "private-route-table-${count.index + 1}-${var.stage}"
+    name = "private-route-table-${count.index + 1}-${var.stage}"
   }
 }
 
