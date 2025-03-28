@@ -187,7 +187,7 @@ jobs:
       - name: Trigger Backend CI/CD
         uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # PAT로 세팅 필요
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: your-org/backend-repo
           event-type: deploy-backend
           client-payload: '{"stage": "dev"}'
@@ -195,7 +195,7 @@ jobs:
       - name: Trigger Frontend CI/CD
         uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.  }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: your-org/frontend-repo
           event-type: deploy-frontend
           client-payload: '{"stage": "dev"}'
