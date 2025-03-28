@@ -43,8 +43,8 @@ resource "aws_s3_bucket_policy" "terraform_state_policy" {
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::jung9546-terraformstate",
-        "arn:aws:s3:::jung9546-terraformstate/*"
+        "arn:aws:s3:::jm-story-terraformstate",
+        "arn:aws:s3:::jm-story-terraformstate/*"
       ]
     }
   ]
