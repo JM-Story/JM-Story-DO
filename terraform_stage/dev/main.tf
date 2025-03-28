@@ -5,7 +5,6 @@ terraform {
       version = ">= 5.0"
     }
   }
-
   backend "s3" {
     bucket         = "jm-story-terraformstate"
     key            = "dev/terraform/main.tfstate"
