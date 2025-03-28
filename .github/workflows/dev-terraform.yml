@@ -184,3 +184,20 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_DEV_JM4520_AWS_SECRET_ACCESS_KEY }}
         run: |
           cd terraform_stage/dev; terraform destroy -auto-approve
+
+      - name: Trigger Backend CI/CD
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # PAT로 세팅 필요
+          repository: your-org/backend-repo
+          event-type: deploy-backend
+          client-payload: '{"stage": "dev"}'
+
+      - name: Trigger Frontend CI/CD
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.  }}
+          repository: your-org/frontend-repo
+          event-type: deploy-frontend
+          client-payload: '{"stage": "dev"}'
+
