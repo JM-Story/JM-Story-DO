@@ -5,9 +5,8 @@ on:
   push:
     branches:
       - 'main'
-  # pull_request:
-  #   branches:
-  #     - 'main'
+  repository_dispatch:
+    types: [deploy-backend]
     paths-ignore:
       - '**/stage-terraform.yml'
   workflow_dispatch:
