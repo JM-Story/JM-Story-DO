@@ -1,0 +1,25 @@
+# Terraform 상태 파일
+*.tfstate
+*.tfstate.backup
+
+# Terraform 작업 디렉토리
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+
+# 실행 계획 파일
+*.tfplan
+
+# Terraform 로그 파일
+crash.log
+terraform.log
+
+# 민감한 변수 파일
+*.tfvars
+*.tfvars.json
+
+# OS 및 IDE 관련 파일
+.DS_Store
+.vscode/
+.idea/
+*.iml
