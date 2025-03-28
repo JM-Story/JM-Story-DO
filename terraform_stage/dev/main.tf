@@ -10,7 +10,7 @@ terraform {
     key            = "dev/terraform/main.tfstate"
     region         = "ap-northeast-2"
     encrypt        = true
-    dynamodb_table = "jm-story-terraform-state"
+    dynamodb_table = "jm-story-terraformstate"
   }
 }
 
